@@ -44,7 +44,11 @@ def printMenu():
     print("6- Transportar obras de un departamento ")
     print("0- Salir")
 
-catalog = None
+catalog = controller.initCatalog()
+
+
+
+
 
 """
 Menu principal
@@ -54,7 +58,14 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        controller.loadData(catalog)
+        artistas = controller.ultimosArtistas(catalog)
+        obras= controller.ultimasObras(catalog)
 
+        print(artistas)
+        print(obras)
+
+        
     elif int(inputs[0]) == 2:
         pass
     elif int(inputs[0]) == 3:

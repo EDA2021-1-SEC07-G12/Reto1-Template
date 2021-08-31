@@ -37,9 +37,57 @@ los mismos.
 
 # Construccion de modelos
 
+
+def newCatalog():
+
+    catalogo={"lista obras":None,
+                "lista_artistas":None
+    }
+
+    lista_obras= lt.newList("ARRAY_LIST")
+    lista_artistas= lt.newList("ARRAY_LIST")
+
+    catalogo["lista_obras"] = lista_obras
+    catalogo["lista_artistas"] = lista_artistas
+
+    return catalogo
+
+
+    
+    
+    
+
 # Funciones para agregar informacion al catalogo
 
+def addArtist(catalogo, artista):
+    lt.addLast(catalogo['lista_artistas'], artista)
+    # Se obtienen los autores del libro
+    #authors = artista['lista_artistas'].split(",")
+    # Cada autor, se crea en la lista de libros del catalogo, y se
+    ## crea un libro en la lista de dicho autor (apuntador al libro)
+   # Funcionesfor author in authors:
+     #   addBookAuthor(catalog, author.strip(), book)
+
+
+
+def addArtwork(catalogo, artwork):
+    lt.addLast(catalogo['lista_obras'], artwork)
 # Funciones para creacion de datos
+def UltimosArtistas(catalogo):
+    lista_artistas= catalogo["lista_artistas"]
+    print("El numero de artistas es " + str(lt.size(lista_artistas)))
+    lista_artistas = lt.subList(lista_artistas,lt.size(lista_artistas)-3,3)
+    
+
+    return lista_artistas
+
+
+
+def UltimasObras(catalogo):
+    lista_obras= catalogo["lista_obras"]
+    print("El numero de obras es " + str(lt.size(lista_obras)))
+    lista_obras = lt.subList(lista_obras,lt.size(lista_obras)-3,3)
+    return lista_obras
 
 # Funciones de consulta
 

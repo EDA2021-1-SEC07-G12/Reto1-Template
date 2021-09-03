@@ -20,9 +20,12 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+import abc
 import config as cf
 import model
 import csv
+import datetime
+
 
 
 """
@@ -74,4 +77,28 @@ def ultimasObras(catalog):
 
 # Funciones de ordenamiento
 
+
+
+#def ordernarCronologicamente(inicio,final, catalogo):
+    lista= lt.newList("ARRAY_LIST")
+    for i in catalogo:
+        fecha= catalogo["BeginDate"]
+
+        if inicio<fecha<final
+            lista=lt.addlast(i)
+   
+
+
+        
 # Funciones de consulta sobre el catálogo
+
+
+
+
+    
+   
+
+
+
+print(comparacionAnios(15/2/2021,"",""))
+

@@ -53,7 +53,7 @@ def newCatalog():
     return catalogo
 
 
-    
+
     
     
 
@@ -89,8 +89,30 @@ def UltimasObras(catalogo):
     lista_obras = lt.subList(lista_obras,lt.size(lista_obras)-3,3)
     return lista_obras
 
+
+
 # Funciones de consulta
+
+def ordernarCronologicamente(inicio,final, catalogo):
+    lista= lt.newList("ARRAY_LIST")
+    lista_artistas= catalogo["lista_artistas"]
+    for i in range(lt.size(lista_artistas)):
+        print(lt.getElement(lista_artistas,i))
+
+    return 0
+    
+        
+     
+    
+    
+
+
+"""   if inicio<int(catalogo["lista_artistas"][i]["BeginDate"])<final:
+            diccionario= {}
+            diccionario[["lista_artistas"][i]["DisplayName"]]= ["lista_artistas"][i]["BeginDate"]
+            lt.addlast(lista,diccionario )"""
+
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
-# Funciones de ordenamiento
+# Funciones de ordenamient

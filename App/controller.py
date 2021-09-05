@@ -75,30 +75,13 @@ def ultimasObras(catalog):
     
     return model.UltimasObras(catalog)
 
-# Funciones de ordenamiento
+def organizar_fechas(catalog):
+    inicial= 0
+    final= 1
+    return model.ordernarCronologicamente(inicial, final, catalog)
+#
+# 
+#  Funciones de ordenamiento
 
 
-
-#def ordernarCronologicamente(inicio,final, catalogo):
-    lista= lt.newList("ARRAY_LIST")
-    for i in catalogo:
-        fecha= catalogo["BeginDate"]
-
-        if inicio<fecha<final
-            lista=lt.addlast(i)
-   
-
-
-        
-# Funciones de consulta sobre el catálogo
-
-
-
-
-    
-   
-
-
-
-print(comparacionAnios(15/2/2021,"",""))
 

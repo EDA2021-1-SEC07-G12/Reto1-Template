@@ -71,7 +71,7 @@ while True:
         variable= controller.organizar_fechas(catalog)
         print(variable)
     elif int(inputs[0]) == 3:
-        print(catalog)
+        print(controller.organizar_fechas(catalog))
     elif int(inputs[0]) == 4:
         pass
     elif int(inputs[0]) == 5:

@@ -94,12 +94,33 @@ def UltimasObras(catalogo):
 # Funciones de consulta
 
 def ordernarCronologicamente(inicio,final, catalogo):
+    
     lista= lt.newList("ARRAY_LIST")
-    lista_artistas= catalogo["lista_artistas"]
-    for i in range(lt.size(lista_artistas)):
-        print(lt.getElement(lista_artistas,i))
 
-    return 0
+    lista_artistas= catalogo["lista_artistas"]
+
+    for i in range(lt.size(lista_artistas)):
+
+        diccionario={}
+        elemento=lt.getElement(lista_artistas,i)
+
+        fecha = elemento["BeginDate"]
+        if inicio<int(fecha)<final:
+            diccionario[elemento["DisplayName"]] = fecha
+            lt.addLast(lista,diccionario)
+    
+        
+        
+    return lista
+
+
+    
+   
+  
+        
+
+
+    
     
         
      
@@ -107,10 +128,6 @@ def ordernarCronologicamente(inicio,final, catalogo):
     
 
 
-"""   if inicio<int(catalogo["lista_artistas"][i]["BeginDate"])<final:
-            diccionario= {}
-            diccionario[["lista_artistas"][i]["DisplayName"]]= ["lista_artistas"][i]["BeginDate"]
-            lt.addlast(lista,diccionario )"""
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista

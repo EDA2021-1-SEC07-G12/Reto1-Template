@@ -79,6 +79,12 @@ def organizar_fechas(catalog):
     inicial= int(input("Inserte fecha inicial "))
     final= int(input("Inserte fecha final "))
     return model.ordernarCronologicamente(inicial,final,catalog)
+
+
+def organizar_obras(catalog):
+    inicial= int(input("Inserte fecha inicial "))
+    final= int(input("Inserte fecha final "))
+    return model.ordenarObras(inicial,final,catalog)
 #
 # 
 #  Funciones de ordenamiento

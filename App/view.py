@@ -73,7 +73,8 @@ while True:
     elif int(inputs[0]) == 3:
         print(controller.organizar_fechas(catalog))
     elif int(inputs[0]) == 4:
-        pass
+
+        print(controller.organizar_obras(catalog))
     elif int(inputs[0]) == 5:
         pass
     elif int(inputs[0]) == 6:

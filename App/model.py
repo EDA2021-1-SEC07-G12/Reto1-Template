@@ -40,7 +40,7 @@ los mismos.
 
 def newCatalog():
 
-    catalogo={"lista obras":None,
+    catalogo={"lista_obras":None,
                 "lista_artistas":None
     }
 
@@ -106,30 +106,77 @@ def ordernarCronologicamente(inicio,final, catalogo):
 
         fecha = elemento["BeginDate"]
         if inicio<int(fecha)<final:
-            diccionario[elemento["DisplayName"]] = fecha
+            diccionario["Nombre"] = elemento["DisplayName"]
+            diccionario["Nacimiento"] = elemento["BeginDate"]
+            if elemento["EndDate"]=="0":
+                diccionario["Fallecimiento"] = "Desconocido"
+            else:
+                diccionario["Fallecimiento"] = elemento["EndDate"]
+
+            diccionario["Nacionalidad"] = elemento["Nationality"]
+            if elemento["Gender"]=="":
+               diccionario["Genero"]="Desconocido" 
+            else:
+                diccionario["Genero"]= elemento["Gender"]
+            lt.addLast(lista,diccionario)
+
+    artistasOrdenados= sa.sort(lista,OrdenarFechas)
+    return artistasOrdenados
+
+
+def ordenarObras(inicio,final,catalogo):
+    lista= lt.newList("ARRAY_LIST")
+
+    lista_obras= catalogo["lista_obras"]
+
+    for i in range(lt.size(lista_obras)):
+
+        diccionario={}
+        elemento=lt.getElement(lista_obras,i)
+
+        
+        fecha = elemento["DateAcquired"]
+
+        if elemento["DateAcquired"]=="":
+            fecha=0000
+
+        if len(str(fecha))>5:
+            fecha =fecha.split("-")
+            fecha=fecha[0]
+            print(fecha)
+        if inicio<int(fecha)<final:
+            
+            
+            
+            
+            diccionario["Titulo"] = elemento["Title"]
+            #diccionario["Artista"] = elemento[""]
+            diccionario["Fecha adquisicion"] = fecha
+            diccionario["Medio"] = elemento["Medium"]
+            diccionario["Dimensiones"] = elemento["Dimensions"]
+
             lt.addLast(lista,diccionario)
     
-        
-        
+    
+    fechasOrdenadas=sa.sort(lista,OrdenarFechasObras)
     return lista
-
-
-    
-   
-  
-        
-
-
-    
-    
-        
-     
-    
-    
-
-
-
-
 # Funciones utilizadas para comparar elementos dentro de una lista
 
-# Funciones de ordenamient
+# Funciones de ordenamiento
+
+
+def OrdenarFechas(artista1,artista2):
+    Retorno=True
+    if int(artista1["Nacimiento"])<=int(artista2["Nacimiento"]):
+        Retorno=True
+    else:
+        Retorno=False
+    return Retorno
+
+def OrdenarFechasObras(obra1,obra2):
+    Retorno=True
+    if int(obra1["Fecha adquisicion"])<=int(obra2["Fecha adquisicion"]):
+        Retorno=True
+    else:
+        Retorno=False
+    return Retorno

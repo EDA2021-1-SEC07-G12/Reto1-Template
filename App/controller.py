@@ -85,6 +85,10 @@ def organizar_obras(catalog):
     inicial= int(input("Inserte fecha inicial "))
     final= int(input("Inserte fecha final "))
     return model.ordenarObras(inicial,final,catalog)
+
+def clasificar_obras_por_tecnica(catalog):
+    nombre=input("Inserte nombre del artista: ")
+    return model.clasificar_obras_por_tecnica(nombre,catalog)
 #
 # 
 #  Funciones de ordenamiento

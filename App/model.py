@@ -29,7 +29,7 @@ import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
-
+import re
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
@@ -126,7 +126,7 @@ def ordernarCronologicamente(inicio,final, catalogo):
 
 def ordenarObras(inicio,final,catalogo):
     lista= lt.newList("ARRAY_LIST")
-
+    lista_artistas=catalogo["lista_artistas"]
     lista_obras= catalogo["lista_obras"]
 
     for i in range(lt.size(lista_obras)):
@@ -143,15 +143,32 @@ def ordenarObras(inicio,final,catalogo):
         if len(str(fecha))>5:
             fecha =fecha.split("-")
             fecha=fecha[0]
-            print(fecha)
-        if inicio<int(fecha)<final:
+            
+        if inicio<=int(fecha)<=final:
             
             
             
             
             diccionario["Titulo"] = elemento["Title"]
-            #diccionario["Artista"] = elemento[""]
-            diccionario["Fecha adquisicion"] = fecha
+            
+           # for j in range(lt.size(lista_artistas)):
+               # elemento1=lt.getElement(lista_artistas,j)
+              #  if elemento1["ConstituentID"]==elemento["ObjectID"]:
+             #       diccionario["Autor"]= elemento1["DisplayName"]
+            
+            autor=elemento["ConstituentID"]
+            autor=autor.replace("[","")
+            autor=autor.replace("]","")
+            autor=autor.split(",")
+
+            for j in range(len(autor)):
+                for k in range(lt.size(lista_artistas)):
+                    texto = ""
+                    elemento1=lt.getElement(lista_artistas,k)
+                    if autor[j]==elemento1["ConstituentID"]:
+                        texto= texto + " " + elemento1["DisplayName"]  
+                        diccionario["Autores"] =  texto  
+            diccionario["Fecha adquisicion"]=fecha
             diccionario["Medio"] = elemento["Medium"]
             diccionario["Dimensiones"] = elemento["Dimensions"]
 
@@ -160,6 +177,29 @@ def ordenarObras(inicio,final,catalogo):
     
     fechasOrdenadas=sa.sort(lista,OrdenarFechasObras)
     return lista
+
+
+
+def clasificar_obras_por_tecnica(nombre,catalogo):
+    lista_artistas=catalogo["lista_artistas"]
+    lista_obras= catalogo["lista_obras"]
+    datos=0000
+    for i in range(lt.size(lista_artistas)):
+        elemento= lt.getElement(lista_artistas,i)
+
+        if str(elemento["DisplayName"])==nombre:
+            datos=str(elemento["ConstituentID"])
+
+    for k in range(lt.size(lista_obras)):
+        lista= lt.newList("ARRAY_LIST")
+        elemento1=lt.getElement(lista_obras,k)
+        
+        if elemento1["ConstituentID"]=="[" +datos + "]":
+            print(elemento1)
+
+    return "[" +datos + "]"
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
@@ -180,3 +220,4 @@ def OrdenarFechasObras(obra1,obra2):
     else:
         Retorno=False
     return Retorno
+

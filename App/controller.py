@@ -31,11 +31,13 @@ import datetime
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
-def initCatalog():
+def initCatalog(entrada):
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
-    catalog = model.newCatalog()
+    
+    
+    catalog = model.newCatalog(entrada)
     return catalog
 
 
@@ -84,11 +86,14 @@ def organizar_fechas(catalog):
 def organizar_obras(catalog):
     inicial= int(input("Inserte fecha inicial "))
     final= int(input("Inserte fecha final "))
-    return model.ordenarObras(inicial,final,catalog)
+    entrada=input("Ingrese estructura de datos deseada")
+    return model.ordenarObras(inicial,final,catalog, entrada)
 
 def clasificar_obras_por_tecnica(catalog):
     nombre=input("Inserte nombre del artista: ")
     return model.clasificar_obras_por_tecnica(nombre,catalog)
+
+
 #
 # 
 #  Funciones de ordenamiento

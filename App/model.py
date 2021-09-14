@@ -38,14 +38,14 @@ los mismos.
 # Construccion de modelos
 
 
-def newCatalog():
+def newCatalog(entrada):
 
     catalogo={"lista_obras":None,
                 "lista_artistas":None
     }
 
-    lista_obras= lt.newList("ARRAY_LIST")
-    lista_artistas= lt.newList("ARRAY_LIST")
+    lista_obras= lt.newList(entrada)
+    lista_artistas= lt.newList(entrada)
 
     catalogo["lista_obras"] = lista_obras
     catalogo["lista_artistas"] = lista_artistas
@@ -124,8 +124,8 @@ def ordernarCronologicamente(inicio,final, catalogo):
     return artistasOrdenados
 
 
-def ordenarObras(inicio,final,catalogo):
-    lista= lt.newList("ARRAY_LIST")
+def ordenarObras(inicio,final,catalogo, entrada):
+    lista= lt.newList(entrada)
     lista_artistas=catalogo["lista_artistas"]
     lista_obras= catalogo["lista_obras"]
 
@@ -200,6 +200,8 @@ def clasificar_obras_por_tecnica(nombre,catalogo):
     return "[" +datos + "]"
 
 
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
@@ -214,6 +216,8 @@ def OrdenarFechas(artista1,artista2):
     return Retorno
 
 def OrdenarFechasObras(obra1,obra2):
+    
+    
     Retorno=True
     if int(obra1["Fecha adquisicion"])<=int(obra2["Fecha adquisicion"]):
         Retorno=True

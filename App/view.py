@@ -44,7 +44,6 @@ def printMenu():
     print("6- Transportar obras de un departamento ")
     print("0- Salir")
 
-catalog = controller.initCatalog()
 
 
 
@@ -57,13 +56,19 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        entrada1= input("Inserte estrucutra de datos ")
+        catalog = controller.initCatalog(entrada1)
+
+        
+        
+        
         print("Cargando información de los archivos ....")
         controller.loadData(catalog)
         artistas = controller.ultimosArtistas(catalog)
         obras= controller.ultimasObras(catalog)
+        print(catalog)
+        
 
-        print(artistas)
-        print(obras)
 
         
     elif int(inputs[0]) == 2:
@@ -74,7 +79,7 @@ while True:
         print(controller.organizar_fechas(catalog))
     elif int(inputs[0]) == 4:
 
-        print(controller.organizar_obras(catalog))
+        print(lt.size(controller.organizar_obras(catalog)))
     elif int(inputs[0]) == 5:
         print(controller.clasificar_obras_por_tecnica(catalog))
     elif int(inputs[0]) == 6:

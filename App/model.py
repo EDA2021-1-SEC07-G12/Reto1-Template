@@ -209,17 +209,23 @@ def clasificar_obras_por_tecnica(nombre,catalogo):
         elemento2=lt.getElement(lista,l)
         
 
-        if lt.isPresent(lista_medios,elemento2["Medio"]) == 0:
-            lt.addLast(lista_medios,elemento2["Medio"])
+        if lt.isPresent(lista_medios,elemento2["Medium"]) == 0:
+            
+            lt.addLast(lista_medios,elemento2["Medium"])
     
+    print("El autor registró " + str(lt.size(lista_medios)) + " medios diferentes ")
+    lista1=lt.newList("ARRAY_LIST")
+    diccionario={}
+    for a in range(lt.size(lista)):
+        elemento3=lt.getElement(lista, a)
+        if elemento3["Medium"] not in diccionario.keys():
+            diccionario[elemento3["Medium"]]=1
+        else:
+            diccionario[elemento3["Medium"]]+=1
+            
+
     
-    
-    
-    
-    
-    
-    
-    return lista_medios
+    return diccionario
 
 
 

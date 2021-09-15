@@ -26,6 +26,7 @@
 
 
 import config as cf
+import time
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
@@ -124,7 +125,7 @@ def ordernarCronologicamente(inicio,final, catalogo):
     return artistasOrdenados
 
 
-def ordenarObras(inicio,final,catalogo, entrada):
+def ordenarObras(inicio,final,catalogo, entrada, tamano):
     lista= lt.newList(entrada)
     lista_artistas=catalogo["lista_artistas"]
     lista_obras= catalogo["lista_obras"]
@@ -175,10 +176,17 @@ def ordenarObras(inicio,final,catalogo, entrada):
             lt.addLast(lista,diccionario)
     
     
-    fechasOrdenadas=sa.sort(lista,OrdenarFechasObras)
+    fechasOrdenadas= sortBooks(lista,tamano)
     return fechasOrdenadas
 
-
+def sortBooks(catalog, size):
+    sub_list = lt.subList(catalog, 1, size)
+    sub_list = sub_list.copy()
+    start_time = time.process_time()
+    sorted_list = sa.sort(sub_list, OrdenarFechasObras)
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return elapsed_time_mseg
 
 def clasificar_obras_por_tecnica(nombre,catalogo):
     lista_artistas=catalogo["lista_artistas"]

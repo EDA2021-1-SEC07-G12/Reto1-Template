@@ -76,12 +76,12 @@ while True:
         variable= controller.organizar_fechas(catalog)
         print(variable)
     elif int(inputs[0]) == 3:
-        print(controller.organizar_fechas(catalog))
-    elif int(inputs[0]) == 4:
-
         print(controller.organizar_obras(catalog))
-    elif int(inputs[0]) == 5:
+        
+    elif int(inputs[0]) == 4:
         print(controller.clasificar_obras_por_tecnica(catalog))
+    elif int(inputs[0]) == 5:
+        pass
     elif int(inputs[0]) == 6:
         pass
     elif int(inputs[0]) == 0:

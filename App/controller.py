@@ -56,14 +56,14 @@ def loadData(catalog):
 
 
 def loadArtist(catalogo):
-    booksfile = cf.data_dir + 'Artists-utf8-small.csv'
+    booksfile = cf.data_dir + 'Artists-utf8-10pct.csv'
     input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
     for Artist in input_file:
         model.addArtist(catalogo, Artist)
 
 
 def loadArtWork(catalogo):
-    booksfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    booksfile = cf.data_dir + 'Artworks-utf8-10pct.csv'
     input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
     for ArtWorks in input_file:
         model.addArtwork(catalogo, ArtWorks)
@@ -86,8 +86,9 @@ def organizar_fechas(catalog):
 def organizar_obras(catalog):
     inicial= int(input("Inserte fecha inicial "))
     final= int(input("Inserte fecha final "))
-    entrada=input("Ingrese estructura de datos deseada")
-    return model.ordenarObras(inicial,final,catalog, entrada)
+    entrada=input("Ingrese estructura de datos deseada ")
+    tamano=int(input('Ingrese el tamaño de datos que quiere consultar '))
+    return model.ordenarObras(inicial,final,catalog, entrada, tamano)
 
 def clasificar_obras_por_tecnica(catalog):
     nombre=input("Inserte nombre del artista: ")

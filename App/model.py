@@ -38,14 +38,14 @@ los mismos.
 # Construccion de modelos
 
 
-def newCatalog(entrada):
+def newCatalog():
 
     catalogo={"lista_obras":None,
                 "lista_artistas":None
     }
 
-    lista_obras= lt.newList(entrada)
-    lista_artistas= lt.newList(entrada)
+    lista_obras= lt.newList("ARRAY_LIST")
+    lista_artistas= lt.newList("ARRAY_LIST")
 
     catalogo["lista_obras"] = lista_obras
     catalogo["lista_artistas"] = lista_artistas
@@ -176,13 +176,15 @@ def ordenarObras(inicio,final,catalogo, entrada):
     
     
     fechasOrdenadas=sa.sort(lista,OrdenarFechasObras)
-    return lista
+    return fechasOrdenadas
 
 
 
 def clasificar_obras_por_tecnica(nombre,catalogo):
     lista_artistas=catalogo["lista_artistas"]
     lista_obras= catalogo["lista_obras"]
+
+    lista=lt.newList("ARRAY_LIST")
     datos=0000
     for i in range(lt.size(lista_artistas)):
         elemento= lt.getElement(lista_artistas,i)
@@ -191,13 +193,33 @@ def clasificar_obras_por_tecnica(nombre,catalogo):
             datos=str(elemento["ConstituentID"])
 
     for k in range(lt.size(lista_obras)):
-        lista= lt.newList("ARRAY_LIST")
+        
         elemento1=lt.getElement(lista_obras,k)
         
         if elemento1["ConstituentID"]=="[" +datos + "]":
-            print(elemento1)
+            elemento1["ConstituentID"] = nombre
+            lt.addLast(lista,elemento1)
 
-    return "[" +datos + "]"
+    
+    print("El autor tiene una cantidad de " + str(lt.size(lista)) + " obras registradas en el museo")
+
+    lista_medios=lt.newList("ARRAY_LIST")
+    
+    for l in range(lt.size(lista)):
+        elemento2=lt.getElement(lista,l)
+        
+
+        if lt.isPresent(lista_medios,elemento2["Medio"]) == 0:
+            lt.addLast(lista_medios,elemento2["Medio"])
+    
+    
+    
+    
+    
+    
+    
+    
+    return lista_medios
 
 
 
@@ -216,8 +238,6 @@ def OrdenarFechas(artista1,artista2):
     return Retorno
 
 def OrdenarFechasObras(obra1,obra2):
-    
-    
     Retorno=True
     if int(obra1["Fecha adquisicion"])<=int(obra2["Fecha adquisicion"]):
         Retorno=True

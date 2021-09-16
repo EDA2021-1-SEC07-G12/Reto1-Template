@@ -79,6 +79,7 @@ while True:
         print(controller.organizar_obras(catalog))
         
     elif int(inputs[0]) == 4:
+        
         print(controller.clasificar_obras_por_tecnica(catalog))
     elif int(inputs[0]) == 5:
         pass

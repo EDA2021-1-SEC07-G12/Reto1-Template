@@ -28,7 +28,15 @@
 import config as cf
 import time
 from DISClib.ADT import list as lt
+
+
+from DISClib.ADT import list as lt
+from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as ms
+from DISClib.Algorithms.Sorting import quicksort as qs
+
+
 assert cf
 import re
 """
@@ -37,7 +45,10 @@ los mismos.
 """
 
 # Construccion de modelos
+#def importar(texto):
 
+   # if texto=="1":
+   #     from DISClib.Algorithms.Sorting import quicksort as sa 
 
 def newCatalog():
 
@@ -126,7 +137,8 @@ def ordernarCronologicamente(inicio,final, catalogo):
 
 
 def ordenarObras(inicio,final,catalogo, entrada, tamano):
-    lista= lt.newList(entrada)
+    lista=lt.newList(entrada)
+    
     lista_artistas=catalogo["lista_artistas"]
     lista_obras= catalogo["lista_obras"]
 
@@ -175,18 +187,26 @@ def ordenarObras(inicio,final,catalogo, entrada, tamano):
 
             lt.addLast(lista,diccionario)
     
-    
-    fechasOrdenadas= sortBooks(lista,tamano)
+    orden= input("Inserte orden, 1 para ShellSort, 2 para Insertionsort, 3 para mergesort, 4 para quicksort ")
+    fechasOrdenadas= sortBooks(lista,tamano, orden)
     return fechasOrdenadas
 
-def sortBooks(catalog, size):
+def sortBooks(catalog, size, elemento):
     sub_list = lt.subList(catalog, 1, size)
     sub_list = sub_list.copy()
     start_time = time.process_time()
-    sorted_list = sa.sort(sub_list, OrdenarFechasObras)
+    if elemento=="1":
+        sorted_list = sa.sort(sub_list, OrdenarFechasObras)
+    elif elemento=="2":
+        sorted_list=ins.sort(sub_list, OrdenarFechasObras)
+
+    elif elemento=="3":
+        sorted_list=ms.sort(sub_list, OrdenarFechasObras)
+    elif elemento=="4":
+        sorted_list=qs.sort(sub_list, OrdenarFechasObras)
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
-    return elapsed_time_mseg
+    return elapsed_time_mseg, sorted_list
 
 def clasificar_obras_por_tecnica(nombre,catalogo):
     lista_artistas=catalogo["lista_artistas"]

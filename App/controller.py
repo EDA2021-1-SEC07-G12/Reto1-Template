@@ -86,7 +86,9 @@ def organizar_fechas(catalog):
 def organizar_obras(catalog):
     inicial= int(input("Inserte fecha inicial "))
     final= int(input("Inserte fecha final "))
-    entrada=input("Ingrese estructura de datos deseada ")
+    entrada=input("Ingrese estructura de datos deseada ARRAY_LIST para obtener Array, SINGLE_LINKED para obtener lista enlazada ")
+    #texto=input("Inserte tipo de ordenamiento ")
+    #model.importar(texto)
     tamano=int(input('Ingrese el tamaño de datos que quiere consultar '))
     return model.ordenarObras(inicial,final,catalog, entrada, tamano)
 

@@ -232,28 +232,43 @@ def clasificar_obras_por_tecnica(nombre,catalogo):
     print("El autor tiene una cantidad de " + str(lt.size(lista)) + " obras registradas en el museo")
 
     lista_medios=lt.newList("ARRAY_LIST")
-    
-    for l in range(lt.size(lista)):
-        elemento2=lt.getElement(lista,l)
-        
+    lista_medios1=lt.newList("ARRAY_LIST")
+    for l in lt.iterator(lista):
+       
+        if lt.isPresent(lista_medios,l["Medium"]) == 0:
+            lt.addLast(lista_medios,l["Medium"])
 
-        if lt.isPresent(lista_medios,elemento2["Medium"]) == 0:
+    for b in lt.iterator(lista_medios):
+        medio= b
+        diccionario={"Medio":b, "Frecuencia": 0}
+        for a in lt.iterator(lista):
             
-            lt.addLast(lista_medios,elemento2["Medium"])
+
+            if medio==a["Medium"]:
+                diccionario["Frecuencia"] +=1
+        lt.addLast(lista_medios1,diccionario)
+            
     
     print("El autor registró " + str(lt.size(lista_medios)) + " medios diferentes ")
-    lista1=lt.newList("ARRAY_LIST")
-    diccionario={}
-    for a in range(lt.size(lista)):
-        elemento3=lt.getElement(lista, a)
-        if elemento3["Medium"] not in diccionario.keys():
-            diccionario[elemento3["Medium"]]=1
-        else:
-            diccionario[elemento3["Medium"]]+=1
-            
-
     
-    return diccionario
+    medios_ordenados= ms.sort(lista_medios1, ordenarMedios)
+    medios_ordenados=lt.subList(medios_ordenados,1,5)
+
+    print("5 medios más utilizados por el artista")
+    for clave in lt.iterator(medios_ordenados):
+        print(clave)
+    Primero= lt.firstElement(medios_ordenados)
+    lista_obras_con_medio= lt.newList("ARRAY_LIST")
+    for u in lt.iterator(lista):
+        if u["Medium"]==Primero["Medio"]:
+            diccionario = {"Titulo" : u["Title"], "Fecha": u["Date"], "Dimensiones" : u["Dimensions"]}
+            
+            lt.addLast(lista_obras_con_medio, diccionario)
+    print("Las obras con la técnica mas usada del autor ingresado")
+
+    for y in lt.iterator(lista_obras_con_medio):
+        print(y)
+    pass
 
 
 
@@ -279,3 +294,10 @@ def OrdenarFechasObras(obra1,obra2):
         Retorno=False
     return Retorno
 
+def ordenarMedios(medio1,medio2):
+    Retorno=True
+    if int(medio1["Frecuencia"])>int(medio2["Frecuencia"]):
+        Retorno=True
+    else:
+        Retorno=False
+    return Retorno

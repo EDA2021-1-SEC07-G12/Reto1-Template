@@ -24,21 +24,21 @@
  * Dario Correal - Version inicial
  """
 
-
+import pandas as pd
 import config as cf
 import time
 from DISClib.ADT import list as lt
-
+from datetime import date
+from tabulate import tabulate
 
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as ms
 from DISClib.Algorithms.Sorting import quicksort as qs
-
-
+from prettytable import PrettyTable
 assert cf
-import re
+
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
@@ -107,6 +107,9 @@ def UltimasObras(catalogo):
 
 def ordernarCronologicamente(inicio,final, catalogo):
     
+    
+    
+    
     lista= lt.newList("ARRAY_LIST")
 
     lista_artistas= catalogo["lista_artistas"]
@@ -117,170 +120,367 @@ def ordernarCronologicamente(inicio,final, catalogo):
         elemento=lt.getElement(lista_artistas,i)
 
         fecha = elemento["BeginDate"]
-        if inicio<int(fecha)<final:
-            diccionario["Nombre"] = elemento["DisplayName"]
-            diccionario["Nacimiento"] = elemento["BeginDate"]
-            if elemento["EndDate"]=="0":
-                diccionario["Fallecimiento"] = "Desconocido"
-            else:
-                diccionario["Fallecimiento"] = elemento["EndDate"]
-
-            diccionario["Nacionalidad"] = elemento["Nationality"]
-            if elemento["Gender"]=="":
-               diccionario["Genero"]="Desconocido" 
-            else:
-                diccionario["Genero"]= elemento["Gender"]
-            lt.addLast(lista,diccionario)
-
-    artistasOrdenados= sa.sort(lista,OrdenarFechas)
-    return artistasOrdenados
-
-
-def ordenarObras(inicio,final,catalogo, entrada, tamano):
-    lista=lt.newList(entrada)
-    
-    lista_artistas=catalogo["lista_artistas"]
-    lista_obras= catalogo["lista_obras"]
-
-    for i in range(lt.size(lista_obras)):
-
-        diccionario={}
-        elemento=lt.getElement(lista_obras,i)
-
-        
-        fecha = elemento["DateAcquired"]
-
-        if elemento["DateAcquired"]=="":
-            fecha=0000
-
-        if len(str(fecha))>5:
-            fecha =fecha.split("-")
-            fecha=fecha[0]
-            
         if inicio<=int(fecha)<=final:
-            
-            
-            
-            
-            diccionario["Titulo"] = elemento["Title"]
-            
-           # for j in range(lt.size(lista_artistas)):
-               # elemento1=lt.getElement(lista_artistas,j)
-              #  if elemento1["ConstituentID"]==elemento["ObjectID"]:
-             #       diccionario["Autor"]= elemento1["DisplayName"]
-            
-            autor=elemento["ConstituentID"]
-            autor=autor.replace("[","")
-            autor=autor.replace("]","")
-            autor=autor.split(",")
+            diccionario["DisplayName"] = elemento["DisplayName"]
+            diccionario["BeginDate"] = elemento["BeginDate"]
+            diccionario["ConstituentID"]=elemento["ConstituentID"]
+            if elemento["EndDate"]=="0":
+                diccionario["EndDate"] = "Unknown"
+            else:
+                diccionario["EndDate"] = elemento["EndDate"]
 
-            for j in range(len(autor)):
-                for k in range(lt.size(lista_artistas)):
-                    texto = ""
-                    elemento1=lt.getElement(lista_artistas,k)
-                    if autor[j]==elemento1["ConstituentID"]:
-                        texto= texto + " " + elemento1["DisplayName"]  
-                        diccionario["Autores"] =  texto  
-            diccionario["Fecha adquisicion"]=fecha
-            diccionario["Medio"] = elemento["Medium"]
-            diccionario["Dimensiones"] = elemento["Dimensions"]
+            diccionario["Nationality"] = elemento["Nationality"]
+            if elemento["Gender"]=="":
+               diccionario["Gender"]="Unknown" 
+            else:
+                diccionario["Gender"]= elemento["Gender"]
 
+            if elemento["ArtistBio"]=="":
+                diccionario["ArtistBio"]="Unknown"
+            else:
+                diccionario["ArtistBio"]=elemento["ArtistBio"]
+            
+            if elemento["Wiki QID"]=="":
+                diccionario["Wiki QID"]="Unknown"
+            else:
+                diccionario["Wiki QID"]=elemento["Wiki QID"]
+
+            if elemento["ULAN"]=="":
+                diccionario["ULAN"]="Unknown"
+            else:
+                diccionario["ULAN"]=elemento["ULAN"]
+            
+            
             lt.addLast(lista,diccionario)
+
+    artistasOrdenados= ms.sort(lista,OrdenarFechas)
+    primeros3=lt.subList(artistasOrdenados,1,3)
+    ultimos3=lt.subList(artistasOrdenados,int(lt.size(artistasOrdenados))-3,3)
+    for a in lt.iterator(ultimos3):
+        lt.addLast(primeros3,a)
     
-    orden= input("Inserte orden, 1 para ShellSort, 2 para Insertionsort, 3 para mergesort, 4 para quicksort ")
-    fechasOrdenadas= sortBooks(lista,tamano, orden)
-    return fechasOrdenadas
+    
+    return (lt.size(artistasOrdenados),primeros3)
+    
 
-def sortBooks(catalog, size, elemento):
-    sub_list = lt.subList(catalog, 1, size)
-    sub_list = sub_list.copy()
-    start_time = time.process_time()
-    if elemento=="1":
-        sorted_list = sa.sort(sub_list, OrdenarFechasObras)
-    elif elemento=="2":
-        sorted_list=ins.sort(sub_list, OrdenarFechasObras)
-
-    elif elemento=="3":
-        sorted_list=ms.sort(sub_list, OrdenarFechasObras)
-    elif elemento=="4":
-        sorted_list=qs.sort(sub_list, OrdenarFechasObras)
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    return elapsed_time_mseg, sorted_list
-
-def clasificar_obras_por_tecnica(nombre,catalogo):
-    lista_artistas=catalogo["lista_artistas"]
-    lista_obras= catalogo["lista_obras"]
-
+def ordenarObras(dia1,mes1,anio1, dia2, mes2,anio2,catalogo):
+   
     lista=lt.newList("ARRAY_LIST")
-    datos=0000
-    for i in range(lt.size(lista_artistas)):
-        elemento= lt.getElement(lista_artistas,i)
+    inicial=date(anio1,mes1,dia1).isoformat()
+    final=date(anio2,mes2,dia2).isoformat()
+    
+    lista_obras=catalogo["lista_obras"]
+    for i in lt.iterator(lista_obras):
+        if inicial<i["DateAcquired"]<final:
+            lt.addLast(lista,i)
+    obtenerAutor(lista,catalogo["lista_artistas"])
+    
+    
+    retorno= ms.sort(obtenerAutor(lista,catalogo["lista_artistas"]),ordenarObrasFuncion)
 
-        if str(elemento["DisplayName"])==nombre:
-            datos=str(elemento["ConstituentID"])
+    obrasCompradas(retorno)
+    
+    
+    primeros3=lt.subList(retorno,1,3)
+    ultimos3=lt.subList(retorno,int(lt.size(retorno))-3,3)
+    for a in lt.iterator(ultimos3):
+        lt.addLast(primeros3,a)
+    
 
-    for k in range(lt.size(lista_obras)):
-        
-        elemento1=lt.getElement(lista_obras,k)
-        
-        if elemento1["ConstituentID"]=="[" +datos + "]":
-            elemento1["ConstituentID"] = nombre
-            lt.addLast(lista,elemento1)
+
+    return  (lt.size(retorno),lt.size(contarAutores(retorno)) , primeros3, obrasCompradas(retorno))
+
+
+#Implementado por Juan Andrés Bernal Gil
+def clasificar_obras_por_tecnica(nombre,catalogo):
+   
+    lista_artistas= catalogo["lista_artistas"]
+    lista_obras=catalogo["lista_obras"]
+    lista_obras_autor=lt.newList("ARRAY_LIST")
+    lista_autor=lt.newList("ARRAY_LIST")
+    for i in lt.iterator(lista_artistas):
+       for j in lt.iterator(lista_obras):
+           ConstituentID=str(i["ConstituentID"])
+           if i["DisplayName"]==nombre and ("[" +ConstituentID + "]" == j["ConstituentID"]):
+               lt.addLast(lista_obras_autor,j["Medium"])
+               lt.addLast(lista_autor,j)
+    
+    Contador = contar(lista_obras_autor,eliminarRepetidos(lista_obras_autor))
+    ordenado= ms.sort(Contador, ordenarContador)
+    ordenado1 = lt.subList(ordenado,1,5)
+    medio_mas_usado= lt.getElement(ordenado,1)
+    medio_mas_usado= lt.getElement(medio_mas_usado,1)
+    ObrasCantidad="El autor tiene una cantidad de " + str(lt.size(lista_obras_autor)) + " obras registradas en el museo"
+    Mediosdif='El autor empleó ' + str(lt.size(eliminarRepetidos(lista_obras_autor))) + " Medios diferentes"
+    
+    tabla=tabulate(imprimir5Elementos(ordenado1), headers=["MediumName","Count"], tablefmt='fancy_grid')
+
+    obras1=lt.newList("ARRAY_LIST")
+    for k in lt.iterator(lista_autor):
+        if k["Medium"]==medio_mas_usado:
+            lt.addLast(obras1,k)
+    
+    
+    return  [obras1,ObrasCantidad,Mediosdif,tabla]
+#Implementado por Juan Esteban Lopez
+def requerimiento_4_1(catalogo):
+    obras=catalogo['lista_obras']
+    artistas=catalogo['lista_artistas']
+    lista_codigos_a=lt.newList('ARRAY_LIST')
+    for k in range(lt.size(artistas)):
+        elemento_a=lt.getElement(artistas,k)
+        codigo_a=elemento_a['ConstituentID']
+        lt.addLast(lista_codigos_a,codigo_a)
+    lista_nacionalidad=lt.newList('ARRAY_LIST')  
+    for i in range(lt.size(obras)):
+        elemento_o=lt.getElement(obras,i)
+        codigo_o=elemento_o['ConstituentID']
+        codigo_o=codigo_o.replace('[',"")
+        codigo_o=codigo_o.replace(']',"")
+        posi=lt.isPresent(lista_codigos_a,codigo_o)
+        elemento_final=lt.getElement(artistas,posi)
+        nacionalidad=elemento_final['Nationality']
+        lt.addLast(lista_nacionalidad,nacionalidad)
+    nacionalidades_filtradas= eliminarRepetidos(lista_nacionalidad)
+    n_contadas=contar(lista_nacionalidad,nacionalidades_filtradas)
+    ordenada=ms.sort(n_contadas,OrdenarNacionalidad)
+    top_10=lt.subList(ordenada,1,10)
+    dict_top_10={}
+    lista_paises=lt.newList('ARRAY_LIST')
+    for c in top_10['elements']:
+        lt.addLast(lista_paises,c['elements'][1])
+        if c['elements'][1]=="":
+            dict_top_10['Unkown']=c['size']
+        else:
+            dict_top_10[c['elements'][1]]=c['size']
+    respuesta=(dict_top_10,lista_paises)
+    return respuesta
+def requerimiento_4_2(catalogo,lista_paises):
+    pais=lt.getElement(lista_paises,1)
+    obras=catalogo['lista_obras']
+    artistas=catalogo['lista_artistas']
+    lista_codigos_a=lt.newList('ARRAY_LIST')
+    for k in range(lt.size(artistas)):
+        elemento_a=lt.getElement(artistas,k)
+        codigo_a=elemento_a['ConstituentID']
+        lt.addLast(lista_codigos_a,codigo_a)
+    lista_obras_pais=lt.newList('ARRAY_LIST')
+    for i in range(lt.size(obras)):
+        elemento_o=lt.getElement(obras,i)
+        codigo_o=elemento_o['ConstituentID']
+        codigo_o=codigo_o.replace('[',"")
+        codigo_o=codigo_o.replace(']',"")
+        posi=lt.isPresent(lista_codigos_a,codigo_o)
+        elemento_final=lt.getElement(artistas,posi)
+        nacionalidad=elemento_final['Nationality']
+        resp_obra=lt.newList('ARRAY_LIST')
+        lt.addLast(resp_obra,elemento_o['Title'])
+        lt.addLast(resp_obra,elemento_final['DisplayName'])
+        lt.addLast(resp_obra,elemento_o['Date'])
+        lt.addLast(resp_obra,elemento_o['Medium'])
+        lt.addLast(resp_obra,elemento_o['Dimensions'])
+        if nacionalidad==pais:
+            lt.addLast(lista_obras_pais,resp_obra)
+    lista_final=lt.newList('ARRAY_LIST')
+    lt.addLast(lista_final,lt.getElement(lista_obras_pais,1))
+    lt.addLast(lista_final,lt.getElement(lista_obras_pais,2))
+    lt.addLast(lista_final,lt.getElement(lista_obras_pais,3))
+    lt.addLast(lista_final,lt.getElement(lista_obras_pais,-1))
+    lt.addLast(lista_final,lt.getElement(lista_obras_pais,-2))
+    lt.addLast(lista_final,lt.getElement(lista_obras_pais,-3))
+    print (lista_final)
 
     
-    print("El autor tiene una cantidad de " + str(lt.size(lista)) + " obras registradas en el museo")
-
-    lista_medios=lt.newList("ARRAY_LIST")
-    lista_medios1=lt.newList("ARRAY_LIST")
-    for l in lt.iterator(lista):
-       
-        if lt.isPresent(lista_medios,l["Medium"]) == 0:
-            lt.addLast(lista_medios,l["Medium"])
-
-    for b in lt.iterator(lista_medios):
-        medio= b
-        diccionario={"Medio":b, "Frecuencia": 0}
-        for a in lt.iterator(lista):
-            
-
-            if medio==a["Medium"]:
-                diccionario["Frecuencia"] +=1
-        lt.addLast(lista_medios1,diccionario)
-            
+def requerimiento5(catalogo, departamento):
+    lista_obras=catalogo["lista_obras"]
     
-    print("El autor registró " + str(lt.size(lista_medios)) + " medios diferentes ")
+    for i in lt.iterator(lista_obras):
+        if i["Date"]=="":
+            i["Date"]=9999
+            #Pusimos este valor debido a que si ponemos 0 o "indefinido", no dejaría llegar a los primeros
+        if i["Weight (kg)"]=="":
+            i["Weight (kg)"]=0
+    lista_artistas=catalogo["lista_artistas"]
+    lista_obras_departamento=lt.newList("ARRAY_LIST")
     
-    medios_ordenados= ms.sort(lista_medios1, ordenarMedios)
-    medios_ordenados=lt.subList(medios_ordenados,1,5)
+    for i in lt.iterator(lista_obras):
+        if i["Department"]==departamento:
+            lt.addLast(lista_obras_departamento, i)
+    CalcularCostos=calcularCostos(lista_obras_departamento)
+    ordenado=ms.sort(CalcularCostos,OrdenarCostos)
+    
+    costoMax=Costomax(ordenado)
+    autores=obtenerAutor(ordenado,lista_artistas)
+    ObrasMasCostosas=lt.subList(autores,1,5)
+    fechas_obras= ms.sort(autores,OrdenarFechasObras1)
+    fechas_obras=lt.subList(fechas_obras,1,5)
+    peso=Peso(autores)
+    #obras_viejas=lt.subList(OrdenarFechasObras1)
+   # fechas_obras=lt.subList(fechas_obras,1,5)
+   #(costoMax,ObrasMasCostosas, fechas_obras)
+    return [costoMax,ObrasMasCostosas,fechas_obras,peso,lt.size(autores) ]
 
-    print("5 medios más utilizados por el artista")
-    for clave in lt.iterator(medios_ordenados):
-        print(clave)
-    Primero= lt.firstElement(medios_ordenados)
-    lista_obras_con_medio= lt.newList("ARRAY_LIST")
-    for u in lt.iterator(lista):
-        if u["Medium"]==Primero["Medio"]:
-            diccionario = {"Titulo" : u["Title"], "Fecha": u["Date"], "Dimensiones" : u["Dimensions"]}
-            
-            lt.addLast(lista_obras_con_medio, diccionario)
-    print("Las obras con la técnica mas usada del autor ingresado")
+def requerimiento6(catalogo, anio1,anio2, area):
+    lista=lt.newList("ARRAY_LIST")
+    lista_artistas=catalogo["lista_artistas"]
+    lista_obras=catalogo["lista_obras"]
+    for i in lt.iterator(lista_obras):
 
-    for y in lt.iterator(lista_obras_con_medio):
-        print(y)
-    pass
-
-
+        if i["Date"]=="":
+            i["Date"]=0000
+        elif anio1<=int(i["Date"])<=anio2:
+            lt.addLast(lista,i)
+    area1=calcularArea(lista)
+    sumatoria=sumatoriaArea(area1,area)
+    lista_final=lt.newList('ARRAY_LIST')
+    total=lt.subList(sumatoria[1],1,5)
+    ultimos3=lt.subList(area1,int(lt.size(area1))-5,5)
+    for a in lt.iterator(ultimos3):
+        lt.addLast(total,a)
+    
+    
+    return [lt.size(area1), round(sumatoria[0],3), lt.size(sumatoria[1]) , total]
+    
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+def contarAutores(lista):
+    lista1=lt.newList("ARRAY_LIST")
+    for i in lt.iterator(lista):
+        autores=i["Autores"]
+        for j in autores:
+           
+                lt.addLast(lista1,j)
 
+    return lista1
+def obtenerFechas(lista):
+    lista1=lt.newList("ARRAY_LIST")
+    for i in lt.iterator(lista):
+        
+            lt.addLast(lista1, i["DateAcquired"])
+    return lista1
+
+def eliminarRepetidos(lista):
+    lista1=lt.newList('ARRAY_LIST')
+    for i in lt.iterator(lista):
+        if lt.isPresent(lista1,i)==0:
+            lt.addLast(lista1,i)
+    return lista1
+
+def contar(lista1,lista2):
+    lista_grande=lt.newList("ARRAY_LIST")
+    for a in lt.iterator(lista2):
+        lista=lt.newList("ARRAY_LIST")
+        for b in lt.iterator(lista1):
+            if a==b:
+                lt.addLast(lista,a)
+        lt.addLast(lista_grande,lista)
+    return lista_grande
+
+def calcularCostos(catalogo):
+    for i in lt.iterator(catalogo):
+       
+        if i["Height (cm)"]!= "":
+
+            altura= float(i["Height (cm)"])/100
+        elif i["Length (cm)"]!="":
+            altura=float(i["Length (cm)"])/100
+        else:
+            altura=0
+        if i["Width (cm)"]!="":
+
+            ancho = float(i["Width (cm)"])/100
+        else:
+            ancho=0
+        
+        if i["Depth (cm)"]!="":
+
+            profundidad= float(i["Depth (cm)"])/100
+        else:
+            profundidad=0
+            
+        if i["Weight (kg)"]!= "":
+
+            peso=float(i["Weight (kg)"])
+        else:
+            peso=0
+        
+        if i["Diameter (cm)"]!="":
+
+            radio = ((float(i["Diameter (cm)"])/2)/100)
+        else:
+            radio=0
+
+        
+        area=altura*ancho*72
+        volumen=altura*ancho*profundidad*72
+        peso = peso*72
+        area_cir=(radio*radio*radio)*4*3.1416/3*72
+        lista=[area,volumen,peso,area_cir]
+        if max(lista)==0:
+            i["Costo"]=48
+        else:
+            i["Costo"] = max(lista)
+    return catalogo
+
+def obtenerAutor(lista,lista_autores):
+    for i in  lt.iterator(lista):
+        lista1=[]
+        lista2=[]
+        for j in lt.iterator(lista_autores):
+            autor=i["ConstituentID"]
+            autor=autor.replace("[","")
+            autor=autor.replace("]","")
+            autor=autor.split(",")
+            
+        for k in autor:
+            k=k.replace(" ", "")
+            lista1.append(k)
+
+        for h in lt.iterator(lista_autores):
+            for n in lista1:
+
+                if h["ConstituentID"]==n:
+                    lista2.append(h["DisplayName"])
+            i["Autores"]=lista2
+    return lista
+def Costomax(lista):
+    costo=0
+    for i in lt.iterator(lista):
+        costo+=i["Costo"]
+    return round(costo,3)
+
+def Peso(lista):
+    peso=0
+    for i in lt.iterator(lista):
+        peso+=int(i["Weight (kg)"])
+    return round(peso,2)
+def sumatoriaArea(lista,area):
+    suma=0
+    prueba=0
+    lista1=lt.newList("ARRAY_LIST")
+    for i in lt.iterator(lista):
+        if suma+i["Area estimada m^2"]>=area:
+            break
+        else:
+            lt.addLast(lista1,i)
+            suma+=i["Area estimada m^2"]
+            prueba=suma        
+    
+    return [suma,lista1]
+def obrasCompradas(lista):
+    lista1=lt.newList("ARRAY_LIST")
+    for i in lt.iterator(lista):
+        if i["CreditLine"]=="Purchase":
+            lt.addLast(lista1,i)
+
+    return lt.size(lista1)
 # Funciones de ordenamiento
 
 
 def OrdenarFechas(artista1,artista2):
     Retorno=True
-    if int(artista1["Nacimiento"])<=int(artista2["Nacimiento"]):
+    if int(artista1["BeginDate"])<=int(artista2["BeginDate"]):
         Retorno=True
     else:
         Retorno=False
@@ -294,10 +494,66 @@ def OrdenarFechasObras(obra1,obra2):
         Retorno=False
     return Retorno
 
-def ordenarMedios(medio1,medio2):
+def OrdenarFechasObras1(obra1,obra2):
     Retorno=True
-    if int(medio1["Frecuencia"])>int(medio2["Frecuencia"]):
+    if int(obra1["Date"])<=int(obra2["Date"]):
         Retorno=True
     else:
         Retorno=False
     return Retorno
+
+def calcularArea(lista):
+    for i in lt.iterator(lista):
+        if i["Width (cm)"]=="" or i["Height (cm)"]=="":
+            area=0
+        else:
+            Ancho=float(i["Width (cm)"])/100
+            Altura=float(i["Height (cm)"])/100
+            area=Ancho*Altura
+
+        i["Area estimada m^2"] = round(area,5)
+
+    return lista
+def ordenarObrasFuncion(obra1,obra2):
+    retorno=None
+    if int(obra1["DateAcquired"]<obra2["DateAcquired"]):
+        retorno=True
+    else:
+        Retorno=False
+    return retorno
+
+def ordenarContador(objetos1, objetos2):
+    retorno=None
+    if int(objetos1["size"]>objetos2["size"]):
+        retorno=True
+    else:
+        Retorno=False
+    return retorno
+
+
+def imprimir5Elementos(lista):
+    print("Las 5 tecnicas más usadas por el autor fueron: ")
+    diccionario={"MediumName" : [], "Count" : []}
+    for i in lt.iterator(lista):
+        elemento= i["elements"]
+        diccionario["MediumName"].append(str(elemento[0]))
+        diccionario["Count"].append(str(i["size"])) 
+    return diccionario
+
+
+def OrdenarCostos(obra1,obra2):
+    Retorno=True
+    
+    if float(obra1["Costo"])>int(obra2["Costo"]):
+        Retorno=True
+    else:
+        Retorno=False
+    return Retorno
+def OrdenarNacionalidad(lista1,lista2):
+    Retorno=True
+    if int(lista1['size'])>=int(lista2["size"]):
+        Retorno=True
+    else:
+        Retorno=False
+    return Retorno
+
